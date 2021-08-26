@@ -16,6 +16,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import Link from 'next/link'
+import { useSession } from 'next-auth/client'
 
 import { DarkModeSwitch } from '../DarkModeSwitch'
 
@@ -47,6 +48,7 @@ const NavLink = ({ children, path }: { children: ReactNode; path: string }) => (
 
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [session] = useSession()
 
   return (
     <div className={navStyles.mobileNav}>
@@ -72,18 +74,21 @@ export default function Navbar() {
               ))}
             </HStack>
           </HStack>
-          <Flex alignItems={'center'}>
+          <Flex align="center" justifyContent="center">
             <DarkModeSwitch />
-            <Menu>
+            <Menu closeOnSelect>
               <MenuButton
                 as={Button}
                 rounded={'full'}
                 variant={'link'}
-                cursor={'pointer'}>
+                cursor={'pointer'}
+                onMouseEnter={onOpen}>
                 <Avatar
                   size={'sm'}
                   src={
-                    'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
+                    session
+                      ? `${session.user?.image}`
+                      : 'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
                   }
                 />
               </MenuButton>
