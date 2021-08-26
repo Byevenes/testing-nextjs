@@ -74,8 +74,8 @@ const Index: NextPage = () => {
 
   return (
     <>
-      <Hero />
       <Main>
+        <Hero />
         <Text>
           Example repository of <Code>Next.js</Code> + <Code>chakra-ui</Code> +{' '}
           <Code>typescript</Code>.

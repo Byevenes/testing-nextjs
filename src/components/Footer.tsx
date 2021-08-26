@@ -1,5 +1,5 @@
 import { Flex, FlexProps } from '@chakra-ui/react'
 
 export const Footer: React.FC<FlexProps> = props => (
-  <Flex as="footer" py="6rem" {...props} />
+  <Flex as="footer" py="2rem" {...props} />
 )

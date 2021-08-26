@@ -4,9 +4,9 @@ export const Main: React.FC<StackProps> = props => (
   <Stack
     spacing="1.5rem"
     width="100%"
-    maxWidth="48rem"
-    mt="-45vh"
-    pt="8rem"
+    maxWidth="40rem"
+    mt="-15vh"
+    pt="5rem"
     px="1rem"
     {...props}
   />

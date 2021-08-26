@@ -5,7 +5,7 @@ type Props = {
 }
 
 export const Hero: React.FC<Props> = ({ title = 'Rokket Labs Template' }) => (
-  <Flex justifyContent="center" alignItems="center" height="100vh">
+  <Flex justifyContent="center" alignItems="center">
     <Heading fontSize="6vw">{title}</Heading>
   </Flex>
 )
