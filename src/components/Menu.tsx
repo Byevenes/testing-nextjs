@@ -34,7 +34,8 @@ export const MenuComponent: React.FC<FlexProps> = props => {
     return (
       <MenuItem
         onClick={() => (session ? signOutAndClearData() : signIn())}
-        icon={<RepeatIcon />}>
+        icon={<RepeatIcon />}
+        color="green.500">
         {loading ? <Spinner /> : menuText}
       </MenuItem>
     )
@@ -47,17 +48,21 @@ export const MenuComponent: React.FC<FlexProps> = props => {
           as={IconButton}
           aria-label="Options"
           icon={<HamburgerIcon />}
+          color="green.500"
           variant="outline"
+          borderColor="green.500"
         />
         <MenuList>
           <MenuItem
             onClick={() => router.push('/crud')}
-            icon={<SettingsIcon />}>
+            icon={<SettingsIcon />}
+            color="green.500">
             Crud
           </MenuItem>
           <MenuItem
             onClick={() => router.push('/')}
-            icon={<ExternalLinkIcon />}>
+            icon={<ExternalLinkIcon />}
+            color="green.500">
             Home
           </MenuItem>
           {renderAuthMenu()}
