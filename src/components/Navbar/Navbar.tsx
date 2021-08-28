@@ -1,22 +1,22 @@
 import { ReactNode } from 'react'
-import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons'
 import {
   Avatar,
   Box,
   Button,
   Flex,
   HStack,
-  IconButton,
   Menu,
   MenuButton,
   MenuDivider,
   MenuItem,
   MenuList,
-  Stack,
+  useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/client'
+
+import { MenuComponent } from 'components/Menu'
 
 import { DarkModeSwitch } from '../DarkModeSwitch'
 
@@ -41,6 +41,7 @@ const NavLink = ({ children, path }: { children: ReactNode; path: string }) => (
     rounded={'md'}
     _hover={{
       textDecoration: 'none',
+      backgroundColor: useColorModeValue('green.100', 'green.500'),
     }}>
     <Link href={path}>{children}</Link>
   </Box>
@@ -54,19 +55,13 @@ export default function Navbar() {
     <div className={navStyles.mobileNav}>
       <Box py="2rem" px="2rem" minW="90vw">
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-          <IconButton
-            size={'md'}
-            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-            aria-label={'Open Menu'}
-            display={{ md: 'none' }}
-            onClick={isOpen ? onClose : onOpen}
-          />
+          <MenuComponent />
           <HStack spacing={8} alignItems={'center'}>
             <Box>Logo</Box>
             <HStack
               as={'nav'}
               spacing={4}
-              display={{ base: 'none', md: 'flex' }}>
+              display={['none', 'none', 'flex', 'flex']}>
               {Links.map(({ name, path }) => (
                 <NavLink key={path} path={path}>
                   {name}
@@ -76,13 +71,15 @@ export default function Navbar() {
           </HStack>
           <Flex align="center" justifyContent="center">
             <DarkModeSwitch />
-            <Menu closeOnSelect>
+            <Menu isOpen={isOpen}>
               <MenuButton
                 as={Button}
                 rounded={'full'}
                 variant={'link'}
-                cursor={'pointer'}
-                onMouseEnter={onOpen}>
+                onMouseEnter={onOpen}
+                _hover={{
+                  backgroundColor: useColorModeValue('green.100', 'green.500'),
+                }}>
                 <Avatar
                   size={'sm'}
                   src={
@@ -92,27 +89,39 @@ export default function Navbar() {
                   }
                 />
               </MenuButton>
-              <MenuList>
-                <MenuItem>Profile</MenuItem>
-                <MenuItem>Settings</MenuItem>
+              <MenuList onMouseLeave={onClose}>
+                <MenuItem
+                  _hover={{
+                    backgroundColor: useColorModeValue(
+                      'green.100',
+                      'green.500',
+                    ),
+                  }}>
+                  Profile
+                </MenuItem>
+                <MenuItem
+                  _hover={{
+                    backgroundColor: useColorModeValue(
+                      'green.100',
+                      'green.500',
+                    ),
+                  }}>
+                  Settings
+                </MenuItem>
                 <MenuDivider />
-                <MenuItem>Cerrar Sesion</MenuItem>
+                <MenuItem
+                  _hover={{
+                    backgroundColor: useColorModeValue(
+                      'green.100',
+                      'green.500',
+                    ),
+                  }}>
+                  Cerrar Sesion
+                </MenuItem>
               </MenuList>
             </Menu>
           </Flex>
         </Flex>
-
-        {isOpen ? (
-          <Box pb={4} display={{ md: 'none' }}>
-            <Stack as={'nav'} spacing={4}>
-              {Links.map(({ name, path }) => (
-                <NavLink key={path} path={path}>
-                  {name}
-                </NavLink>
-              ))}
-            </Stack>
-          </Box>
-        ) : null}
       </Box>
 
       {/* <Box p={4}>Main Content Here</Box> */}

@@ -1,13 +1,12 @@
-import { Stack, StackProps } from '@chakra-ui/react'
+import { Flex, FlexProps } from '@chakra-ui/react'
 
-export const Main: React.FC<StackProps> = props => (
-  <Stack
-    spacing="1.5rem"
-    width="100%"
+export const Main: React.FC<FlexProps> = props => (
+  <Flex
+    spacing="5rem"
+    width="90%"
     maxWidth="40rem"
-    mt="-15vh"
-    pt="5rem"
-    px="1rem"
+    flexDirection="column"
+    mt="2rem"
     {...props}
   />
 )
