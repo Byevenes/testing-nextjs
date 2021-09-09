@@ -7,6 +7,9 @@ import {
   SettingsIcon,
 } from '@chakra-ui/icons'
 import {
+  Drawer,
+  DrawerContent,
+  DrawerOverlay,
   Flex,
   FlexProps,
   IconButton,
@@ -57,26 +60,31 @@ export const MenuComponent: React.FC<FlexProps> = props => {
           onClick={isOpen ? onClose : onOpen}
           onMouseEnter={onOpen}
         />
-        <MenuList onMouseLeave={onClose}>
-          <MenuItem
-            onClick={() => router.push('/crud')}
-            icon={<SettingsIcon />}
-            _hover={{
-              backgroundColor: useColorModeValue('green.100', 'green.500'),
-            }}>
-            Crud
-          </MenuItem>
-          <MenuItem
-            onClick={() => router.push('/')}
-            icon={<ExternalLinkIcon />}
-            _hover={{
-              backgroundColor: useColorModeValue('green.100', 'green.500'),
-            }}>
-            Home
-          </MenuItem>
-          <MenuDivider />
-          {renderAuthMenu(useColorModeValue('green.100', 'green.500'))}
-        </MenuList>
+        <Drawer isOpen={isOpen} onClose={onClose} placement="left">
+          <DrawerOverlay />
+          <DrawerContent>
+            <MenuList onMouseLeave={onClose}>
+              <MenuItem
+                onClick={() => router.push('/crud')}
+                icon={<SettingsIcon />}
+                _hover={{
+                  backgroundColor: useColorModeValue('green.100', 'green.500'),
+                }}>
+                Crud
+              </MenuItem>
+              <MenuItem
+                onClick={() => router.push('/')}
+                icon={<ExternalLinkIcon />}
+                _hover={{
+                  backgroundColor: useColorModeValue('green.100', 'green.500'),
+                }}>
+                Home
+              </MenuItem>
+              <MenuDivider />
+              {renderAuthMenu(useColorModeValue('green.100', 'green.500'))}
+            </MenuList>
+          </DrawerContent>
+        </Drawer>
       </Menu>
     </Flex>
   )
