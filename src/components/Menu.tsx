@@ -1,91 +1,146 @@
-import { useQueryClient } from 'react-query'
+/* eslint-disable max-lines-per-function */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { ReactNode } from 'react'
+import { HamburgerIcon, SettingsIcon } from '@chakra-ui/icons'
 import {
-  CloseIcon,
-  ExternalLinkIcon,
-  HamburgerIcon,
-  RepeatIcon,
-  SettingsIcon,
-} from '@chakra-ui/icons'
-import {
+  Box,
+  BoxProps,
   Drawer,
   DrawerContent,
   DrawerOverlay,
   Flex,
   FlexProps,
+  Icon,
   IconButton,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
-  Spinner,
+  Text,
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react'
-import { useRouter } from 'next/dist/client/router'
-import { signIn, signOut, useSession } from 'next-auth/client'
+import Link from 'next/link'
+
+const Links = [
+  {
+    name: 'Home',
+    path: '/',
+    icon: HamburgerIcon,
+  },
+  {
+    name: 'Crud',
+    path: '/crud',
+    icon: SettingsIcon,
+  },
+]
 
 export const MenuComponent: React.FC<FlexProps> = props => {
-  const queryClient = useQueryClient()
-  const router = useRouter()
-  const [session, loading] = useSession()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const renderAuthMenu = (color: string) => {
-    const menuText = session ? 'Sign Out' : 'Sign In'
-
-    const signOutAndClearData = async () => {
-      await signOut()
-      queryClient.clear()
-    }
-
+  const NavItem = ({
+    icon,
+    children,
+    path,
+    ...rest
+  }: {
+    children: ReactNode
+    icon: typeof Icon
+    path: string
+  }) => {
     return (
-      <MenuItem
-        onClick={() => (session ? signOutAndClearData() : signIn())}
-        icon={<RepeatIcon />}
-        _hover={{ backgroundColor: color }}>
-        {loading ? <Spinner /> : menuText}
-      </MenuItem>
+      <Flex
+        align="center"
+        px="4"
+        mx="2"
+        rounded="md"
+        py="3"
+        cursor="pointer"
+        color="whiteAlpha.700"
+        _hover={{
+          bg: 'blackAlpha.300',
+          color: 'whiteAlpha.900',
+        }}
+        role="group"
+        fontWeight="semibold"
+        transition=".15s ease"
+        {...rest}
+        onClick={onClose}>
+        {icon && (
+          <Icon
+            mr="2"
+            boxSize="4"
+            _groupHover={{
+              color: 'gray.300',
+            }}
+            as={icon}
+          />
+        )}
+        <Link href={path}>{children}</Link>
+      </Flex>
     )
   }
 
+  const SidebarContent = (props: BoxProps) => (
+    <Box
+      as="nav"
+      pos="fixed"
+      top="0"
+      left="0"
+      zIndex="sticky"
+      h="full"
+      pb="10"
+      overflowX="hidden"
+      overflowY="auto"
+      bg="brand.600"
+      borderColor="blackAlpha.300"
+      borderRightWidth="1px"
+      w="60"
+      onMouseLeave={onClose}
+      {...props}>
+      <Flex px="4" py="5" align="center">
+        <Text fontSize="2xl" ml="2" color="white" fontWeight="semibold">
+          Choc UI
+        </Text>
+      </Flex>
+      <Flex
+        direction="column"
+        as="nav"
+        fontSize="sm"
+        color="gray.600"
+        aria-label="Main Navigation"
+        display={['flex', 'flex', 'flex', 'flex']}>
+        {Links.map(({ name, path, icon }) => (
+          <NavItem key={path} path={path} icon={icon}>
+            {name}
+          </NavItem>
+        ))}
+      </Flex>
+    </Box>
+  )
+
   return (
-    <Flex display={['flex', 'flex', 'none', 'none']} {...props}>
-      <Menu isOpen={isOpen}>
-        <MenuButton
-          as={IconButton}
-          aria-label="Options"
-          icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-          variant="outline"
-          onClick={isOpen ? onClose : onOpen}
+    <Flex>
+      <Flex display={['none', 'none', 'flex', 'flex']}>
+        <Box
+          as="section"
+          bg={useColorModeValue('red.50', 'red.700')}
+          minH="100vh"
+          {...props}>
+          <SidebarContent display={{ base: 'none', md: 'unset' }} />
+          <Drawer isOpen={isOpen} onClose={onClose} placement="left">
+            <DrawerOverlay />
+            <DrawerContent>
+              <SidebarContent w="full" borderRight="none" />
+            </DrawerContent>
+          </Drawer>
+        </Box>
+      </Flex>
+      <Flex display={['flex', 'flex', 'none', 'none']}>
+        <IconButton
+          aria-label="Menu"
+          onClick={onOpen}
+          icon={<HamburgerIcon />}
+          size="sm"
           onMouseEnter={onOpen}
         />
-        <Drawer isOpen={isOpen} onClose={onClose} placement="left">
-          <DrawerOverlay />
-          <DrawerContent>
-            <MenuList onMouseLeave={onClose}>
-              <MenuItem
-                onClick={() => router.push('/crud')}
-                icon={<SettingsIcon />}
-                _hover={{
-                  backgroundColor: useColorModeValue('green.100', 'green.500'),
-                }}>
-                Crud
-              </MenuItem>
-              <MenuItem
-                onClick={() => router.push('/')}
-                icon={<ExternalLinkIcon />}
-                _hover={{
-                  backgroundColor: useColorModeValue('green.100', 'green.500'),
-                }}>
-                Home
-              </MenuItem>
-              <MenuDivider />
-              {renderAuthMenu(useColorModeValue('green.100', 'green.500'))}
-            </MenuList>
-          </DrawerContent>
-        </Drawer>
-      </Menu>
+      </Flex>
     </Flex>
   )
 }
